@@ -38,6 +38,7 @@ function Order(props) {
     const [brand, setBrand] = useState([]);
     const [madeIn, setMadeIn] = useState([]);
     const [stock, setStock] = useState([]);
+    const [button,setButton] = useState(true);
     useEffect(() => {
         // console.log(props)
         db.collection('Categories').doc(props.match.params.id1).collection('SubCategories').doc(props.match.params.id2).collection('Products').doc(props.match.params.id3).get()
@@ -50,6 +51,7 @@ function Order(props) {
       },[]);
 
       function sendEmail(e) {
+        console.log("asdd")
         e.preventDefault();    //This is important, i'm not sure why, but the email won't send without it
         console.log("asdasd")
          emailjs.sendForm('service_dd769zo', 'template_m4vjk7a', e.target, 'user_C1MGdzPNZhnTRhT7VKmAo')
@@ -58,14 +60,32 @@ function Order(props) {
           }, (error) => {
               console.log(error.text);
           });
+          setButton(!button)
           // e.target.reset();
+          
+
+        
           return (
             <>
               <h1>Order Placed</h1>
             </>
           )
+          
       }
+const addPO = () => {
+  db.collection('PendingOrders').add({
+    Name : name,
+    Price: price,
+    Brand: brand,
+    Stock: stock,
+    Status: true
+  })
 
+  setBrand(''); //clear the input
+  setName(''); //clear the input
+  setPrice(''); //clear the input
+  setMadeIn(''); //clear the input
+}
   return (
     <>
       <div className="content">
@@ -135,9 +155,36 @@ function Order(props) {
                       <FormGroup>
                         <label>Product</label>
                         <Input
-                          defaultValue={product.Name}
+                          
                           type="text"
                           name="pname"
+                          value={name}
+                          placeholder={product.Name}
+                          onChange={event => setName(event.target.value)}
+                        />
+                      </FormGroup>
+                    </Col>
+                    <Col md="3">
+                      <FormGroup>
+                        <label>Brand</label>
+                        <Input
+                          placeholder={product.Brand}
+                          type="text"
+                          name="pname"
+                          value={brand}
+                          onChange={event => setBrand(event.target.value)}
+                        />
+                      </FormGroup>
+                    </Col>
+                    <Col md="3">
+                      <FormGroup>
+                        <label>price</label>
+                        <Input
+                          placeholder={product.Price}
+                          type="text"
+                          name="price"
+                          value={price}
+                          onChange={event => setPrice(event.target.value)}
                         />
                       </FormGroup>
                     </Col>
@@ -145,17 +192,25 @@ function Order(props) {
                       <FormGroup>
                         <label>Stock</label>
                         <Input
-                          defaultValue={product.Stock}
+                          placeholder={product.Stock}
                           type="text"
                           name="stock"
+                          value={stock}
+                          onChange={event => setStock(event.target.value)}
                         />
                       </FormGroup>
                     </Col>
                   </Row>
-                  <Link to= {{
-                          pathname: `/admin/icons/${props.match.params.id1}/${props.match.params.id2}/${props.match.params.id3}/pendingOrder`}}>
-                    <Button className="btn-fill" variant="contained" color="primary" type="submit">
+                  {button?<Button className="btn-fill" variant="contained" color="primary" type="submit" onClick={addPO}>
                     Order
+                  </Button>:<Button className="btn-fill" variant="contained" color="primary" type="submit" disabled>
+                    Order
+                  </Button>}
+                  <br/>
+                  <Link className="mt-3" to= {{
+                          pathname: `/admin/icons/${props.match.params.id1}/${props.match.params.id2}/${props.match.params.id3}/pendingOrder`}} type="submit">
+                    <Button className="btn-fill" variant="contained">
+                    Pending Orders
                   </Button>
                 </Link>
                 </Form>

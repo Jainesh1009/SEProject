@@ -29,181 +29,86 @@ import {
     Form,
     Input,
   } from "reactstrap";
-function PendingOrder(props) {
+function PendingOrders(props) {
 
 
-    const [product, setProduct] = useState([]);
+    const [orders, setOrders] = useState([]);
     const [name, setName] = useState([]);
     const [price, setPrice] = useState([]);
     const [brand, setBrand] = useState([]);
     const [madeIn, setMadeIn] = useState([]);
     const [stock, setStock] = useState([]);
     useEffect(() => {
-        // console.log(props)
-        db.collection('Categories').doc(props.match.params.id1).collection('SubCategories').doc(props.match.params.id2).collection('Products').doc(props.match.params.id3).get()
-        .then(snapshot => 
-          setProduct(snapshot.data())
-        //   console.log(snapshot.docs.map(doc => (doc.data().Sub)))
-        //   console.log(props.match.params)
-        )
+    db.collection('PendingOrders').onSnapshot(snapshot => {
+      setOrders(snapshot.docs.map(doc => ({id:doc.id ,Price:doc.data().Price,Brand:doc.data().Brand,Name:doc.data().Name,Status:doc.data().Status,Stock:doc.data().Stock})))
+    })
+
+  }, []);
         // console.log(product)
-      },[]);
+        // console.log(orders)
 
-      function sendEmail(e) {
-        e.preventDefault();    //This is important, i'm not sure why, but the email won't send without it
-        console.log("asdasd")
-         emailjs.sendForm('service_dd769zo', 'template_m4vjk7a', e.target, 'user_C1MGdzPNZhnTRhT7VKmAo')
-          .then((result) => {
-              window.location.reload()  //This is if you still want the page to reload (since e.preventDefault() cancelled that behavior) 
-          }, (error) => {
-              console.log(error.text);
-          });
-          // e.target.reset();
-          return (
-            <>
-              <h1>Order Placed</h1>
-            </>
-          )
-      }
-
+const updateOrders = (e) => {
+    e.preventDefault()
+    
+}
   return (
     <>
       <div className="content">
-      <Row>
-          <Col md="8">
+      <div className="content">
+        <Row>
+          <Col md="12">
             <Card>
-              <CardHeader>
-                <h5 className="title">Order Details</h5>
-              </CardHeader>
+                <CardHeader>
+                <CardTitle tag="h4">Pending Orders</CardTitle>
+                </CardHeader>
               <CardBody>
-                <Form className="contact-form" onSubmit={sendEmail}>
-                  <Row>
-                    <Col className="px-md-1" md="3">
-                      <FormGroup>
-                        <label>Dealer Name</label>
-                        <Input
-                          defaultValue="michael23"
-                          placeholder="Username"
-                          type="text"
-                          name="Dname"
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col className="pl-md-1" md="4">
-                      <FormGroup>
-                        <label htmlFor="exampleInputEmail1">
-                         Dealer's Email address
-                        </label>
-                        <Input placeholder="kashishshah1411@gmail.com" defaultValue="kashishshah1411@gmail.com" type="email" name="email"/>
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md="12">
-                      <FormGroup>
-                        <label>Warehouse Address</label>
-                        <Input
-                          defaultValue="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09"
-                          placeholder="Home Address"
-                          type="text"
-                          name="address"
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className="pr-md-1" md="4">
-                      <FormGroup>
-                        <label>City</label>
-                        <Input
-                          defaultValue="Ahmedabad"
-                          placeholder="City"
-                          type="text"
-                          name="city"
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col className="pl-md-1" md="4">
-                      <FormGroup>
-                        <label>Postal code</label>
-                        <Input placeholder="ZIP Code" type="number" defaultValue="12345" name="pcode"/>
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md="3">
-                      <FormGroup>
-                        <label>Product</label>
-                        <Input
-                          defaultValue={product.Name}
-                          type="text"
-                          name="pname"
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col md="3">
-                      <FormGroup>
-                        <label>Stock</label>
-                        <Input
-                          defaultValue={product.Stock}
-                          type="text"
-                          name="stock"
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Link to= {{
-                          pathname: `/admin/icons/${props.match.params.id1}/${props.match.params.id2}/${props.match.params.id3}/pendingOrder`}}>
-                    <Button className="btn-fill" variant="contained" color="primary" type="submit">
-                    Order
-                  </Button>
-                </Link>
-                </Form>
+                <Row>
+
+                <Table className="tablesorter" responsive>
+                    <thead className="text-primary">
+                      <tr>
+                        <th>Product Name</th>
+                        <th>Brand</th>
+                        <th>Price</th>
+                        <th>Stock ordered</th>
+                        <th>Order Stauts</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {orders.map(order => (
+                      <tr>
+                        <td>{order.Name}</td>
+                        <td>{order.Brand}</td>
+                        <td>{order.Price}</td>
+                        <td>{order.Stock}</td>
+                        {order.Status?<td>pending</td>:<td>delivered</td>}
+                        <td><Button  className="ml-1" type="submit"variant="contained" color="primary" onClick={updateOrders}>Order Received</Button></td>
+                      </tr>
+                    ) )}     
+                    </tbody>
+                  </Table>
+                {/* <Col md='4'>
+                <Table className="tablesorter" responsive>
+                    <thead className="text-primary">
+                      <tr>
+                        <th>Stock</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+
+                    <Button onClick={clicked}>pressme</Button>
+                    </tbody>
+                  </Table>
+                </Col> */}
+                </Row>
               </CardBody>
-            </Card>
-          </Col>
-          <Col md="4">
-            <Card className="card-user">
-              <CardBody>
-                <CardText />
-                <div className="author">
-                  <div className="block block-one" />
-                  <div className="block block-two" />
-                  <div className="block block-three" />
-                  <div className="block block-four" />
-                  <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                    <img
-                      alt="..."
-                      className="avatar"
-                      src={require("../img/emilyz.jpg").default}
-                    />
-                    <h5 className="title">Mike Andrew</h5>
-                  </a>
-                  <p className="description">Dealer</p>
-                </div>
-                <div className="card-description">
-                    Dealer for this product.
-                </div>
-              </CardBody>
-              <CardFooter>
-                <div className="button-container">
-                  <Button className="btn-icon btn-round" color="facebook">
-                    <i className="fab fa-facebook" />
-                  </Button>
-                  <Button className="btn-icon btn-round" color="twitter">
-                    <i className="fab fa-twitter" />
-                  </Button>
-                  <Button className="btn-icon btn-round" color="google">
-                    <i className="fab fa-google-plus" />
-                  </Button>
-                </div>
-              </CardFooter>
             </Card>
           </Col>
         </Row>
+      </div>
       </div>
     </>
   );
 }
 
-export default PendingOrder;
+export default PendingOrders;

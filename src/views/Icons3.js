@@ -100,11 +100,11 @@ function Icons3(props) {
   //       })
   //       console.log(stock1)
   // }
-                       {/* {stock1.map(data => (
-                      <tr>
-                        <td>{data}</td>
-                      </tr>
-                    ) )}           */}
+                    //     {stock1.map(data => (
+                    //   <tr>
+                    //     <td>{data}</td>
+                    //   </tr>
+                    // ) )}           
 
   return (
     <>

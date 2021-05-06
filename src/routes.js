@@ -27,12 +27,13 @@ import Typography from "./views/Typography.js";
 import UserProfile from "./views/UserProfile.js";
 import Category from "./views/Category.js"
 import Order from "./views/Order" 
+import PendingOrder from "./views/PendingOrders" 
 var routes = [
   {
     path:"/icons/:id1/:id2/:id3/pendingOrder",
     name:"OrderPage",
     icon: "tim-icons icon-atom",
-    component: Order,
+    component: PendingOrder,
     layout: "/admin"
   },
   {

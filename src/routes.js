@@ -28,7 +28,32 @@ import UserProfile from "./views/UserProfile.js";
 import Category from "./views/Category.js"
 import Order from "./views/Order" 
 import PendingOrder from "./views/PendingOrders" 
+import BillingForm from "./views/BillingForm"
+import Additems from "./views/Additems"
+import Bill from "./views/Bill"
+
 var routes = [
+  {
+    path:"/bill",
+    name:"Bill",
+    icon: "tim-icons icon-atom",
+    component: Bill,
+    layout: "/admin"
+  },
+  {
+    path:"/form",
+    name:"Billing Form",
+    icon: "tim-icons icon-atom",
+    component: BillingForm,
+    layout: "/admin"
+  },
+  {
+    path:"/additems",
+    name:"AddItems",
+    icon: "tim-icons icon-atom",
+    component: Additems,
+    layout: "/admin"
+  },
   {
     path:"/icons/:id1/:id2/:id3/pendingOrder",
     name:"OrderPage",

@@ -18,6 +18,7 @@
 import Dashboard from "./views/Dashboard.js";
 import Icons from "./views/Icons.js";
 import Icons2 from "./views/Icons2.js";
+import Icons3 from "./views/Icons3.js";
 import Map from "./views/Map.js";
 import Notifications from "./views/Notifications.js";
 // import Rtl from "./views/Rtl.js";
@@ -25,7 +26,29 @@ import TableList from "./views/TableList.js";
 import Typography from "./views/Typography.js";
 import UserProfile from "./views/UserProfile.js";
 import Category from "./views/Category.js"
+import Order from "./views/Order" 
 var routes = [
+  {
+    path:"/icons/:id1/:id2/:id3/pendingOrder",
+    name:"OrderPage",
+    icon: "tim-icons icon-atom",
+    component: Order,
+    layout: "/admin"
+  },
+  {
+    path:"/icons/:id1/:id2/:id3",
+    name:"OrderPage",
+    icon: "tim-icons icon-atom",
+    component: Order,
+    layout: "/admin"
+  },
+  {
+    path:"/icons/:id1/:id2",
+    name:"Products",
+    icon: "tim-icons icon-atom",
+    component: Icons3,
+    layout: "/admin"
+  },
   {
     path:"/icons/:id",
     name:"Subcategories",

@@ -15,96 +15,98 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
-
+import React,{useState,useEffect} from "react";
+import {Link} from 'react-router-dom'
+import emailjs from 'emailjs-com';
 // reactstrap components
+import { Card, CardHeader, CardBody, CardTitle, Row, Col, Table } from "reactstrap";
+import {Button} from '@material-ui/core';
+import db from '../firebase';
 import {
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  CardText,
-  FormGroup,
-  Form,
-  Input,
-  Row,
-  Col,
-} from "reactstrap";
+    CardFooter,
+    CardText,
+    FormGroup,
+    Form,
+    Input,
+  } from "reactstrap";
+function PendingOrder(props) {
 
-function UserProfile() {
+
+    const [product, setProduct] = useState([]);
+    const [name, setName] = useState([]);
+    const [price, setPrice] = useState([]);
+    const [brand, setBrand] = useState([]);
+    const [madeIn, setMadeIn] = useState([]);
+    const [stock, setStock] = useState([]);
+    useEffect(() => {
+        // console.log(props)
+        db.collection('Categories').doc(props.match.params.id1).collection('SubCategories').doc(props.match.params.id2).collection('Products').doc(props.match.params.id3).get()
+        .then(snapshot => 
+          setProduct(snapshot.data())
+        //   console.log(snapshot.docs.map(doc => (doc.data().Sub)))
+        //   console.log(props.match.params)
+        )
+        // console.log(product)
+      },[]);
+
+      function sendEmail(e) {
+        e.preventDefault();    //This is important, i'm not sure why, but the email won't send without it
+        console.log("asdasd")
+         emailjs.sendForm('service_dd769zo', 'template_m4vjk7a', e.target, 'user_C1MGdzPNZhnTRhT7VKmAo')
+          .then((result) => {
+              window.location.reload()  //This is if you still want the page to reload (since e.preventDefault() cancelled that behavior) 
+          }, (error) => {
+              console.log(error.text);
+          });
+          // e.target.reset();
+          return (
+            <>
+              <h1>Order Placed</h1>
+            </>
+          )
+      }
+
   return (
     <>
       <div className="content">
-        <Row>
+      <Row>
           <Col md="8">
             <Card>
               <CardHeader>
-                <h5 className="title">Edit Profile</h5>
+                <h5 className="title">Order Details</h5>
               </CardHeader>
               <CardBody>
-                <Form>
+                <Form className="contact-form" onSubmit={sendEmail}>
                   <Row>
-                    <Col className="pr-md-1" md="5">
-                      <FormGroup>
-                        <label>Company (disabled)</label>
-                        <Input
-                          defaultValue="Creative Code Inc."
-                          disabled
-                          placeholder="Company"
-                          type="text"
-                        />
-                      </FormGroup>
-                    </Col>
                     <Col className="px-md-1" md="3">
                       <FormGroup>
-                        <label>Username</label>
+                        <label>Dealer Name</label>
                         <Input
                           defaultValue="michael23"
                           placeholder="Username"
                           type="text"
+                          name="Dname"
                         />
                       </FormGroup>
                     </Col>
                     <Col className="pl-md-1" md="4">
                       <FormGroup>
                         <label htmlFor="exampleInputEmail1">
-                          Email address
+                         Dealer's Email address
                         </label>
-                        <Input placeholder="mike@email.com" type="email" />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className="pr-md-1" md="6">
-                      <FormGroup>
-                        <label>First Name</label>
-                        <Input
-                          defaultValue="Mike"
-                          placeholder="Company"
-                          type="text"
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col className="pl-md-1" md="6">
-                      <FormGroup>
-                        <label>Last Name</label>
-                        <Input
-                          defaultValue="Andrew"
-                          placeholder="Last Name"
-                          type="text"
-                        />
+                        <Input placeholder="kashishshah1411@gmail.com" defaultValue="kashishshah1411@gmail.com" type="email" name="email"/>
                       </FormGroup>
                     </Col>
                   </Row>
                   <Row>
                     <Col md="12">
                       <FormGroup>
-                        <label>Address</label>
+                        <label>Warehouse Address</label>
                         <Input
                           defaultValue="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09"
                           placeholder="Home Address"
                           type="text"
+                          name="address"
                         />
                       </FormGroup>
                     </Col>
@@ -114,51 +116,50 @@ function UserProfile() {
                       <FormGroup>
                         <label>City</label>
                         <Input
-                          defaultValue="Mike"
+                          defaultValue="Ahmedabad"
                           placeholder="City"
                           type="text"
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col className="px-md-1" md="4">
-                      <FormGroup>
-                        <label>Country</label>
-                        <Input
-                          defaultValue="Andrew"
-                          placeholder="Country"
-                          type="text"
+                          name="city"
                         />
                       </FormGroup>
                     </Col>
                     <Col className="pl-md-1" md="4">
                       <FormGroup>
                         <label>Postal code</label>
-                        <Input placeholder="ZIP Code" type="number" />
+                        <Input placeholder="ZIP Code" type="number" defaultValue="12345" name="pcode"/>
                       </FormGroup>
                     </Col>
                   </Row>
                   <Row>
-                    <Col md="8">
+                    <Col md="3">
                       <FormGroup>
-                        <label>About Me</label>
+                        <label>Product</label>
                         <Input
-                          cols="80"
-                          defaultValue="Lamborghini Mercy, Your chick she so thirsty, I'm in
-                            that two seat Lambo."
-                          placeholder="Here can be your description"
-                          rows="4"
-                          type="textarea"
+                          defaultValue={product.Name}
+                          type="text"
+                          name="pname"
+                        />
+                      </FormGroup>
+                    </Col>
+                    <Col md="3">
+                      <FormGroup>
+                        <label>Stock</label>
+                        <Input
+                          defaultValue={product.Stock}
+                          type="text"
+                          name="stock"
                         />
                       </FormGroup>
                     </Col>
                   </Row>
+                  <Link to= {{
+                          pathname: `/admin/icons/${props.match.params.id1}/${props.match.params.id2}/${props.match.params.id3}/pendingOrder`}}>
+                    <Button className="btn-fill" variant="contained" color="primary" type="submit">
+                    Order
+                  </Button>
+                </Link>
                 </Form>
               </CardBody>
-              <CardFooter>
-                <Button className="btn-fill" color="primary" type="submit">
-                  Save
-                </Button>
-              </CardFooter>
             </Card>
           </Col>
           <Col md="4">
@@ -178,12 +179,10 @@ function UserProfile() {
                     />
                     <h5 className="title">Mike Andrew</h5>
                   </a>
-                  <p className="description">Ceo/Co-Founder</p>
+                  <p className="description">Dealer</p>
                 </div>
                 <div className="card-description">
-                  Do not be scared of the truth because we need to restart the
-                  human foundation in truth And I love you like Kanye loves
-                  Kanye I love Rick Owens’ bed design but the back is...
+                    Dealer for this product.
                 </div>
               </CardBody>
               <CardFooter>
@@ -207,4 +206,4 @@ function UserProfile() {
   );
 }
 
-export default UserProfile;
+export default PendingOrder;

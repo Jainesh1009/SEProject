@@ -19,8 +19,8 @@ import React,{useState,useEffect} from "react";
 import {Link} from 'react-router-dom'
 import emailjs from 'emailjs-com';
 // reactstrap components
-import { Card, CardHeader, CardBody, CardTitle, Row, Col, Table } from "reactstrap";
-import {Button} from '@material-ui/core';
+import { Button,Card, CardHeader, CardBody, CardTitle, Row, Col, Table } from "reactstrap";
+// import {Button} from '@material-ui/core';
 import db from '../firebase';
 import {
     CardFooter,
@@ -52,11 +52,11 @@ function Order(props) {
 
       // db.collection('Categories').doc(props.match.params.id1).get()
       // .then(snapshot => 
-      //   setCategory(snapshot.data())   
+      //   setCategory(snapshot.data().Category)   
       // )
       // console.log(category)
       // db.collection("Dealers").doc(`${category}`).get().then(snap => console.log(snap.data()))
-      },[]);
+      },[category]);
 
       function sendEmail(e) {
         console.log("asdd")
@@ -94,6 +94,16 @@ const addPO = () => {
   setPrice(''); //clear the input
   setMadeIn(''); //clear the input
 }
+
+const fetchDealer = (e) =>{
+  e.preventDefault()
+  db.collection('Categories').doc(props.match.params.id1).get()
+  .then(snapshot => 
+    setCategory(snapshot.data())   
+  )
+  // console.log(category.Category)
+  db.collection("Dealers").doc(props.match.params.id1).get().then(snap => setDealer(snap.data()))
+}
   return (
     <>
       <div className="content">
@@ -102,6 +112,7 @@ const addPO = () => {
             <Card>
               <CardHeader>
                 <h5 className="title">Order Details</h5>
+                <Button  color="warning" onClick={fetchDealer}>Default Dealer</Button>
               </CardHeader>
               <CardBody>
                 <Form className="contact-form" onSubmit={sendEmail}>
@@ -217,7 +228,7 @@ const addPO = () => {
                   <br/>
                   <Link className="mt-3" to= {{
                           pathname: `/admin/icons/${props.match.params.id1}/${props.match.params.id2}/${props.match.params.id3}/pendingOrder`}} type="submit">
-                    <Button className="btn-fill" variant="contained">
+                    <Button className="btn-fill" variant="contained" color="success">
                     Pending Orders
                   </Button>
                 </Link>

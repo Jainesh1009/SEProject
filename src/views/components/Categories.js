@@ -8,33 +8,33 @@ import {Link} from 'react-router-dom'
 // import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 function Categories(props) {
-    const getRoutes = (routes) => {
-        return routes.map((prop, key) => {
-          if (prop.layout === "/admin") {
-            // console.log("-------------------------------------")  
-            // console.log(prop.component)
-            // console.log(prop.layout + prop.path)
-            return (   
-              <Route
-                path={prop.layout + prop.path}
-                component={prop.component}
-                key={key}
-              />
-            );
-          } else {
-            return null;
-          }
-        });
-      };
-    const catpage = (event) => {
-        console.log(event)
-        return (
-            <Switch>
-                {getRoutes(routes)}
-                <Redirect from="*" to="/Admin/icons/category" />
-            </Switch>
-        )
-    }
+    // const getRoutes = (routes) => {
+    //     return routes.map((prop, key) => {
+    //       if (prop.layout === "/admin") {
+    //         // console.log("-------------------------------------")  
+    //         // console.log(prop.component)
+    //         // console.log(prop.layout + prop.path)
+    //         return (   
+    //           <Route
+    //             path={prop.layout + prop.path}
+    //             component={prop.component}
+    //             key={key}
+    //           />
+    //         );
+    //       } else {
+    //         return null;
+    //       }
+    //     });
+    //   };
+    // const catpage = (event) => {
+    //     console.log(event)
+    //     return (
+    //         <Switch>
+    //             {getRoutes(routes)}
+    //             <Redirect from="*" to="/Admin/icons/category" />
+    //         </Switch>
+    //     )
+    // }
     // const deleteCategory = (event) => {
     //     db.collection('Categories').doc(props.text.id).delete()
     // }

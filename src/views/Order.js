@@ -39,6 +39,8 @@ function Order(props) {
     const [madeIn, setMadeIn] = useState([]);
     const [stock, setStock] = useState([]);
     const [button,setButton] = useState(true);
+    const [dealer,setDealer] = useState([]);
+    const [category,setCategory] = useState([]);
     useEffect(() => {
         // console.log(props)
         db.collection('Categories').doc(props.match.params.id1).collection('SubCategories').doc(props.match.params.id2).collection('Products').doc(props.match.params.id3).get()
@@ -47,7 +49,13 @@ function Order(props) {
         //   console.log(snapshot.docs.map(doc => (doc.data().Sub)))
         //   console.log(props.match.params)
         )
-        // console.log(product)
+
+      // db.collection('Categories').doc(props.match.params.id1).get()
+      // .then(snapshot => 
+      //   setCategory(snapshot.data())   
+      // )
+      // console.log(category)
+      // db.collection("Dealers").doc(`${category}`).get().then(snap => console.log(snap.data()))
       },[]);
 
       function sendEmail(e) {
@@ -102,7 +110,7 @@ const addPO = () => {
                       <FormGroup>
                         <label>Dealer Name</label>
                         <Input
-                          defaultValue="michael23"
+                          defaultValue={dealer.Name}
                           placeholder="Username"
                           type="text"
                           name="Dname"
@@ -114,7 +122,7 @@ const addPO = () => {
                         <label htmlFor="exampleInputEmail1">
                          Dealer's Email address
                         </label>
-                        <Input placeholder="kashishshah1411@gmail.com" defaultValue="kashishshah1411@gmail.com" type="email" name="email"/>
+                        <Input placeholder="kashishshah1411@gmail.com" defaultValue={dealer.Email} type="email" name="email"/>
                       </FormGroup>
                     </Col>
                   </Row>

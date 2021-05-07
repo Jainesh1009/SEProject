@@ -22,6 +22,7 @@ import emailjs from 'emailjs-com';
 import { Card, CardHeader, CardBody, CardTitle, Row, Col, Table } from "reactstrap";
 import {Button} from '@material-ui/core';
 import db from '../firebase';
+import OrderConfirm from './components/OrderConfirm'
 import {
     CardFooter,
     CardText,
@@ -38,6 +39,7 @@ function PendingOrders(props) {
     const [brand, setBrand] = useState([]);
     const [madeIn, setMadeIn] = useState([]);
     const [stock, setStock] = useState([]);
+    const [quantity, setQuantity] = useState([]);
     useEffect(() => {
     db.collection('PendingOrders').onSnapshot(snapshot => {
       setOrders(snapshot.docs.map(doc => ({id:doc.id ,Price:doc.data().Price,Brand:doc.data().Brand,Name:doc.data().Name,Status:doc.data().Status,Stock:doc.data().Stock})))
@@ -47,10 +49,24 @@ function PendingOrders(props) {
         // console.log(product)
         // console.log(orders)
 
-const updateOrders = (e) => {
-    e.preventDefault()
-    
-}
+// const updateOrders = (stock) => (e) => {
+//   const updateOrders = (e) => {
+//     e.preventDefault()
+//     console.log(props.match.params)
+//     db.collection('Categories').doc(props.match.params.id1).collection('SubCategories').doc(props.match.params.id2).collection('Products').doc(props.match.params.id3).get()
+//     .then(snapshot => 
+//       setQuantity(snapshot.data().Stock)
+//     //   console.log(snapshot.docs.map(doc => (doc.data().Sub)))
+//        )
+//     console.log(stock)
+
+//     db.collection('Categories').doc(props.match.params.id1).collection('SubCategories').doc(props.match.params.id2).collection('Products').
+//     doc(props.match.params.id3).set({
+//       Stock :  quantity + orders.stock,
+//     },
+//     {merge : true}
+//     )
+// }
   return (
     <>
       <div className="content">
@@ -76,14 +92,15 @@ const updateOrders = (e) => {
                     </thead>
                     <tbody>
                     {orders.map(order => (
-                      <tr>
-                        <td>{order.Name}</td>
-                        <td>{order.Brand}</td>
-                        <td>{order.Price}</td>
-                        <td>{order.Stock}</td>
-                        {order.Status?<td>pending</td>:<td>delivered</td>}
-                        <td><Button  className="ml-1" type="submit"variant="contained" color="primary" onClick={updateOrders}>Order Received</Button></td>
-                      </tr>
+                      // <tr>
+                      //   <td>{order.Name}</td>
+                      //   <td>{order.Brand}</td>
+                      //   <td>{order.Price}</td>
+                      //   <td>{order.Stock}</td>
+                      //   <OrderConfirm order={order} id1={props.match.params.id1} id2={props.match.params.id2} id3={props.match.params.id3}/>
+                        
+                      // </tr>
+                      <OrderConfirm order={order} id1={props.match.params.id1} id2={props.match.params.id2} id3={props.match.params.id3}/>
                     ) )}     
                     </tbody>
                   </Table>

@@ -40,7 +40,7 @@ function Categories(props) {
     // }
     return (
         <div>       
-            <CancelIcon onClick={event => db.collection('Categories').doc(props.text.id).delete()}/>
+            <CancelIcon onClick={event => db.firestore().collection('Categories').doc(props.text.id).delete()}/>
             <Link to={{
               pathname: `/admin/icons/${props.text.id}`,
               id: props.text.id

@@ -19,8 +19,8 @@ import React,{useState,useEffect} from "react";
 import Categories from "./components/Categories"
 
 // reactstrap components
-import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
-import {Button} from '@material-ui/core';
+import {Button, Card, CardHeader, CardBody, Row, Col } from "reactstrap";
+// import {Button} from '@material-ui/core';
 import db from '../firebase'
 function Icons() {
   const [category,setCategory] = useState([]);
@@ -32,7 +32,7 @@ function Icons() {
     //this code fires when the app.js loads
     // snapshot.docs.map(doc => doc.data()) this line will give the array of objects
     // adding .todo will give us the array of string directly.
-    db.collection('Categories').onSnapshot(snapshot => {
+    db.firestore().collection('Categories').onSnapshot(snapshot => {
       setCategory(snapshot.docs.map(doc => ({id:doc.id, Category:doc.data().Category})))
     })
   }, []);
@@ -41,7 +41,7 @@ function Icons() {
     //this will fire up when we click the button
     // console.log('Its working')
     event.preventDefault();//stop refresh
-    db.collection('Categories').add({
+    db.firestore().collection('Categories').add({
       Category : input,
     })
   
@@ -54,11 +54,11 @@ function Icons() {
           <Col md="12">
             <Card>
               <CardHeader>
-                <form>
+                <form onSubmit={addCategory}>
                 <h5 className="title">Categories</h5>
                 <input value={input} onChange={event => setInput(event.target.value)}
-                />
-                <Button type="submit"variant="contained" color="primary" onClick={addCategory}>Add Category</Button>
+                required/>
+                <Button type="submit"variant="contained" color="info" >Add Category</Button>
                 </form>
               </CardHeader>
               <CardBody>

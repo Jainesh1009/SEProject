@@ -34,7 +34,7 @@ function Icons3(props) {
     const [id,setId] = useState();
     useEffect(() => {
         // console.log(props)
-        db.collection('Categories').doc(props.match.params.id1).collection('SubCategories').doc(props.match.params.id2).collection('Products').onSnapshot(snapshot => {
+        db.firestore().collection('Categories').doc(props.match.params.id1).collection('SubCategories').doc(props.match.params.id2).collection('Products').onSnapshot(snapshot => {
           setProduct(snapshot.docs.map(doc => ({id:doc.id, data:doc.data()})))
         //   console.log(snapshot.docs.map(doc => (doc.data().Sub)))
         //   console.log(props.match.params)
@@ -68,20 +68,20 @@ function Icons3(props) {
         //this will fire up when we click the button
         // console.log('Its working')
         event.preventDefault();//stop refresh
-        db.collection('Categories').doc(props.match.params.id1).collection('SubCategories').doc(props.match.params.id2).collection("Products").add({
+        db.firestore().collection('Categories').doc(props.match.params.id1).collection('SubCategories').doc(props.match.params.id2).collection("Products").add({
           Name : name,
           Brand: brand,
           Price: price,
           MadeIn: madeIn,
-          // Stock: stock,
+          Stock: stock,
           Id: id
         })
 
-        db.collection('AllProducts').doc(`${id}`).set({
+        db.firestore().collection('AllProducts').doc(`${id}`).set({
           Name: name,
           Quantity: stock  
         })
-        
+        setStock('')
         setId('');
         setBrand(''); //clear the input
         setName(''); //clear the input
@@ -114,20 +114,20 @@ function Icons3(props) {
             <Card>
                 <CardHeader>
                 <CardTitle tag="h4">Products</CardTitle>
-                <form>
+                <form onSubmit={addProduct}>
                   <input  value={name} placeholder="Name Of Product" onChange={event => setName(event.target.value)}
-                  />
+                  required/>
                   <input className="ml-1" value={brand} placeholder="Brand Name" onChange={event => setBrand(event.target.value)}
-                  />
+                  required/>
                    <input className="ml-1" value={price} placeholder="Product Price" onChange={event => setPrice(event.target.value)}
-                  />
+                  required/>
                    <input className="ml-1" value={madeIn} placeholder="Origin of the Product" onChange={event => setMadeIn(event.target.value)}
-                  />
-                   <input className="ml-1" value={stock} placeholder="Quantity/Stock" onChange={event => setStock(event.target.value)}
-                  />
+                  required/>
+                   <input className="ml-1" value={stock} type="number" min='1' placeholder="Quantity/Stock" onChange={event => setStock(event.target.value)}
+                  required/>
                   <input className="ml-1" value={id} placeholder="identity" onChange={event => setId(event.target.value)}
-                  />
-                  <Button className="ml-1" type="submit"variant="contained" color="primary" onClick={addProduct}>Add Product</Button>
+                  required/>
+                  <Button className="ml-1" type="submit"variant="contained" color="primary" >Add Product</Button>
                 </form>
                 </CardHeader>
               <CardBody>

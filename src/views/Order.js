@@ -41,9 +41,10 @@ function Order(props) {
     const [button,setButton] = useState(true);
     const [dealer,setDealer] = useState([]);
     const [category,setCategory] = useState([]);
+    const [date,setDate] = useState([]);
     useEffect(() => {
         // console.log(props)
-        db.collection('Categories').doc(props.match.params.id1).collection('SubCategories').doc(props.match.params.id2).collection('Products').doc(props.match.params.id3).get()
+        db.firestore().collection('Categories').doc(props.match.params.id1).collection('SubCategories').doc(props.match.params.id2).collection('Products').doc(props.match.params.id3).get()
         .then(snapshot => 
           setProduct(snapshot.data())
         //   console.log(snapshot.docs.map(doc => (doc.data().Sub)))
@@ -59,6 +60,7 @@ function Order(props) {
       },[category]);
 
       function sendEmail(e) {
+        e.preventDefault()
         console.log("asdd")
         e.preventDefault();    //This is important, i'm not sure why, but the email won't send without it
         console.log("asdasd")
@@ -71,7 +73,24 @@ function Order(props) {
           setButton(!button)
           // e.target.reset();
           
-
+          var today = new Date(),
+          date1 = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
+          setDate(date1);
+          console.log(date1)
+          db.firestore().collection('PendingOrders').doc(props.match.params.id3).set({
+            Name : name,
+            Price: price,
+            Brand: brand,
+            Stock: stock,
+            Status: true,
+            Date : date1
+          })
+        
+          setBrand(''); //clear the input
+          setName(''); //clear the input
+          setPrice(''); //clear the input
+          setMadeIn(''); //clear the input
+         
         
           return (
             <>
@@ -81,12 +100,17 @@ function Order(props) {
           
       }
 const addPO = () => {
-  db.collection('PendingOrders').add({
+  var today = new Date(),
+  date1 = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
+  setDate(date1);
+  console.log(date1)
+  db.firestore().collection('PendingOrders').doc(props.match.params.id3).set({
     Name : name,
     Price: price,
     Brand: brand,
     Stock: stock,
-    Status: true
+    Status: true,
+    Date : date1
   })
 
   setBrand(''); //clear the input
@@ -97,12 +121,12 @@ const addPO = () => {
 
 const fetchDealer = (e) =>{
   e.preventDefault()
-  db.collection('Categories').doc(props.match.params.id1).get()
+  db.firestore().collection('Categories').doc(props.match.params.id1).get()
   .then(snapshot => 
     setCategory(snapshot.data())   
   )
   // console.log(category.Category)
-  db.collection("Dealers").doc(props.match.params.id1).get().then(snap => setDealer(snap.data()))
+  db.firestore().collection("Dealers").doc(props.match.params.id1).get().then(snap => setDealer(snap.data()))
 }
   return (
     <>
@@ -125,6 +149,7 @@ const fetchDealer = (e) =>{
                           placeholder="Username"
                           type="text"
                           name="Dname"
+                          required
                         />
                       </FormGroup>
                     </Col>
@@ -133,7 +158,7 @@ const fetchDealer = (e) =>{
                         <label htmlFor="exampleInputEmail1">
                          Dealer's Email address
                         </label>
-                        <Input placeholder="kashishshah1411@gmail.com" defaultValue={dealer.Email} type="email" name="email"/>
+                        <Input placeholder="kashishshah1411@gmail.com" defaultValue={dealer.Email} type="email" name="email" required/>
                       </FormGroup>
                     </Col>
                   </Row>
@@ -146,6 +171,7 @@ const fetchDealer = (e) =>{
                           placeholder="Home Address"
                           type="text"
                           name="address"
+                          required
                         />
                       </FormGroup>
                     </Col>
@@ -159,13 +185,14 @@ const fetchDealer = (e) =>{
                           placeholder="City"
                           type="text"
                           name="city"
+                          required
                         />
                       </FormGroup>
                     </Col>
                     <Col className="pl-md-1" md="4">
                       <FormGroup>
                         <label>Postal code</label>
-                        <Input placeholder="ZIP Code" type="number" defaultValue="12345" name="pcode"/>
+                        <Input placeholder="ZIP Code" min='0' type="number" defaultValue="12345" name="pcode" required/>
                       </FormGroup>
                     </Col>
                   </Row>
@@ -180,6 +207,7 @@ const fetchDealer = (e) =>{
                           value={name}
                           placeholder={product.Name}
                           onChange={event => setName(event.target.value)}
+                          required
                         />
                       </FormGroup>
                     </Col>
@@ -192,6 +220,7 @@ const fetchDealer = (e) =>{
                           name="pname"
                           value={brand}
                           onChange={event => setBrand(event.target.value)}
+                          required
                         />
                       </FormGroup>
                     </Col>
@@ -204,6 +233,7 @@ const fetchDealer = (e) =>{
                           name="price"
                           value={price}
                           onChange={event => setPrice(event.target.value)}
+                          required
                         />
                       </FormGroup>
                     </Col>
@@ -212,15 +242,17 @@ const fetchDealer = (e) =>{
                         <label>Stock</label>
                         <Input
                           placeholder={product.Stock}
-                          type="text"
+                          type="number"
                           name="stock"
                           value={stock}
+                          min='1'
                           onChange={event => setStock(event.target.value)}
+                          required
                         />
                       </FormGroup>
                     </Col>
                   </Row>
-                  {button?<Button className="btn-fill" variant="contained" color="primary" type="submit" onClick={addPO}>
+                  {button?<Button className="btn-fill" variant="contained" color="primary" type="submit" >
                     Order
                   </Button>:<Button className="btn-fill" variant="contained" color="primary" type="submit" disabled>
                     Order

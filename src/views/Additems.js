@@ -41,10 +41,11 @@ function Additems(props) {
   const [id,setId] = useState()
   const [quantity,setQuantity] = useState()
   const [temp,setTemp] = useState([])
+  const [button,setButton] = useState(false)
   
   const AddProduct = (event) => {
     event.preventDefault()
-    db.collection('Temp').doc(id).set({
+    db.firestore().collection('Temp').doc(id).set({
       Id:id,
       Quantity : quantity
     })
@@ -54,6 +55,7 @@ function Additems(props) {
   }
   // var quant
   const OnPurchase = (event) => {
+    setButton(true)
     event.preventDefault()
 
     // var te = db.collection('AllProducts').doc('1');
@@ -62,12 +64,12 @@ function Additems(props) {
     // })
     products.map(k => {
       console.log(k.Id)
-      var te = db.collection('AllProducts').doc(`${k.Id}`);
+      var te = db.firestore().collection('AllProducts').doc(`${k.Id}`);
       te.get().then(doc => {
         console.log(doc.data().Quantity)
        var quant = doc.data().Quantity
        var q = k.Quantity;       
-       db.collection('AllProducts').doc(`${k.Id}`).set({
+       db.firestore().collection('AllProducts').doc(`${k.Id}`).set({
         Quantity : quant-q
       },
       {merge : true}
@@ -82,7 +84,7 @@ function Additems(props) {
   // const OnPurchase = (event) => {
   //   event.preventDefault()
   //   // temp2.map(doc => {
-  //   //   db.collection('AllProducts').doc(doc.Id).get().then(snapshot => setTemp(snapshot.data()))
+  //   //   db.firestore().collection('AllProducts').doc(doc.Id).get().then(snapshot => setTemp(snapshot.data()))
   //   // // console.log(db.collection('AllProducts').doc('1').get())
   //   //   console.log(temp.Quantity)
   //   //   console.log(doc.Id)
@@ -94,7 +96,7 @@ function Additems(props) {
   
   useEffect(() => {
     console.log(props.location)
-    db.collection('Temp').onSnapshot(snapshot => {
+    db.firestore().collection('Temp').onSnapshot(snapshot => {
       setProducts(snapshot.docs.map(doc => (doc.data())))
     })
     // db.collection('Temp').onSnapshot(snapshot => {
@@ -114,13 +116,21 @@ const navStyle = {
             <Card>
               <CardHeader>
                 <h5 className="title">Generating the Bill</h5>
-                <Button className="btn-fill" 
+                {button ? <Button className="btn-fill" 
+                disabled
+                color="warning" 
+                type="submit"
+                // onClick={AddProduct}
+                >
+                  Add Item
+                </Button> : <Button className="btn-fill" 
                 color="warning" 
                 type="submit"
                 onClick={AddProduct}
                 >
                   Add Item
-                </Button>
+                </Button>}
+                
               </CardHeader>
               <CardBody>
                 <Form>
@@ -169,13 +179,8 @@ const navStyle = {
                   </tbody>
                 </Table>  
                   </Row>
-                  <Button 
-                className="btn-fill" 
-                color="primary" 
-                type="submit"
-                onClick={OnPurchase}
-                >
-                  <Link 
+
+                {button ? <Link 
                   style={navStyle} 
                   to={{
                     pathname:"/admin/bill",
@@ -183,9 +188,21 @@ const navStyle = {
                     phone:props.location.phone.phone,
                     email:props.location.email.email
                   }}>
-                    Purchase
-                  </Link>                  
-                </Button>
+                    <Button 
+                      className="btn-fill" 
+                      color="primary" 
+                      type="submit"
+                      // onSubmit={OnPurchase}
+                    > 
+                    Generate Invoice                 
+                  </Button>
+                </Link> : <Button color ="success" onClick={OnPurchase}>
+                      Purchase
+                  </Button> }    
+
+                
+                  
+              
                 </Form>
               </CardBody>
 

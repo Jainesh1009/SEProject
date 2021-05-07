@@ -19,6 +19,7 @@ import React from "react";
 import {useState,useEffect} from "react";
 import db from '../firebase'
 import {Link} from 'react-router-dom'
+
 // reactstrap components
 import {
   Button,
@@ -41,19 +42,20 @@ function Bill(props) {
     const [price,setPrice] = useState([])
     const [total,setTotal] = useState()
     const [button,setButton] = useState(true)
+    const [button2,setButton2] = useState(true)
 
     const usefunction = () => {
       console.log(props.location)
-        db.collection('Temp').onSnapshot(snapshot => {
+        db.firestore().collection('Temp').onSnapshot(snapshot => {
             setProducts(snapshot.docs.map(doc => (doc.data())))
           })
     }
-    const usefunction2 = () => {
+    const displaybill = () => {
 
         setButton(false)
         var pr = 0
         products.map(k => {
-            var te = db.collection('AllProducts').doc(`${k.Id}`);
+            var te = db.firestore().collection('AllProducts').doc(`${k.Id}`);
             te.get().then(doc => {
             pr = pr + (k.Quantity*doc.data().Price)
             setTotal(pr)
@@ -66,6 +68,22 @@ function Bill(props) {
           })
 
 
+    }
+
+    // Send Email and stores the data
+    const storeorder = (e) => {
+      setButton2(false)
+      console.log("Submited")
+
+      // Deleting the Temp dataset
+      // db.collection('Temp').delete()
+
+      db.firestore().collection('Orders').add({
+        Name : props.location.name,
+        Email :props.location.email,
+        Phone : props.location.phone,
+        Total_Price : total
+      })
     }
 
 
@@ -81,8 +99,8 @@ function Bill(props) {
             <Card>
               <CardHeader>
                 <h5 className="title">Bill</h5>
-                {button ?  <Button color='warning' onClick={usefunction2}>Show the Bill</Button> : 
-                 <Button disabled color='danger' onClick={usefunction2}>Show the Bill</Button> }                       
+                {button ?  <Button color='primary' onClick={displaybill}>Show the Bill</Button> : 
+                 <Button disabled color='primary' onClick={displaybill}>Show the Bill</Button> }                       
               </CardHeader>
               <CardBody>
                 <Row>
@@ -118,7 +136,7 @@ function Bill(props) {
                       <Table className="tablesorter" responsive>
                         <thead className="text-primary">
                             <tr>                            
-                            <th>Price</th>
+                            <th>Price (in Rs)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -137,8 +155,24 @@ function Bill(props) {
                       </Col>
                       <Col md='4'>
                           <h3>{total}</h3>
-                      </Col>
-                      
+                      </Col>                      
+                  </Row>
+
+                  <Row>
+                  {button2 ? <h1></h1> : <h4> ..Payment Done</h4>}  
+                  </Row>          
+                  <Row>                    
+                    {button2 ?  <Button  onClick={storeorder} >Complete Payment</Button> : 
+                    <Link to={{
+                      pathname:"/admin/billform",
+                      name:props.location.name,
+                      phone:props.location.phone,
+                      email:props.location.email
+                    }}>
+                      <Button color="info">
+                        Generate Invoice
+                      </Button>
+                    </Link>}             
                   </Row>
               
               </CardBody>

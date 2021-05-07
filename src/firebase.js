@@ -1,6 +1,6 @@
-
 import firebase from "firebase";
-const firebaseApp = firebase.initializeApp({
+require('firebase/auth')
+var firebaseConfig = {
     apiKey: "AIzaSyDhTEClUv6NN5HXa5Q0wiFCJVExYtaedE8",
     authDomain: "warehouse-9094b.firebaseapp.com",
     projectId: "warehouse-9094b",
@@ -8,7 +8,7 @@ const firebaseApp = firebase.initializeApp({
     messagingSenderId: "516598560640",
     appId: "1:516598560640:web:5f6adc5afbbba831487365",
     measurementId: "G-S0H0CW67D5"
-});
+  };
 
-const db = firebaseApp.firestore();
+const db = firebase.initializeApp(firebaseConfig);
 export default db;

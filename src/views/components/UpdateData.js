@@ -22,7 +22,6 @@ import emailjs from 'emailjs-com';
 import { Card, CardHeader, CardBody, CardTitle, Row, Col, Table } from "reactstrap";
 import {Button} from '@material-ui/core';
 import db from '../../firebase';
-import UpdateData from './UpdateData'
 import {
     CardFooter,
     CardText,
@@ -30,7 +29,7 @@ import {
     Form,
     Input,
   } from "reactstrap";
-function OrderConfirm({order,id1,id2,id3}) {
+function OrderConfirm({order,id1,id2,id3,stk}) {
 
 
     const [orders, setOrders] = useState([]);
@@ -41,11 +40,11 @@ function OrderConfirm({order,id1,id2,id3}) {
     const [stock, setStock] = useState([]);
     const [quantity, setQuantity] = useState([]);
     useEffect(() => {
-    db.firestore().collection('PendingOrders').onSnapshot(snapshot => {
-      setOrders(snapshot.docs.map(doc => ({id:doc.id ,Price:doc.data().Price,Brand:doc.data().Brand,Name:doc.data().Name,Status:doc.data().Status,Stock:doc.data().Stock})))
-    })
-
-  }, []);
+    // db.firestore().collection('PendingOrders').onSnapshot(snapshot => {
+    //   setOrders(snapshot.docs.map(doc => ({id:doc.id ,Price:doc.data().Price,Brand:doc.data().Brand,Name:doc.data().Name,Status:doc.data().Status,Stock:doc.data().Stock})))
+    // })
+    console.log(Number(stk),Number(order.Stock))
+  }, [stk]);
         // console.log(product)
         // console.log(orders)
 
@@ -53,35 +52,40 @@ function OrderConfirm({order,id1,id2,id3}) {
   const updateOrders = (e) => {
 
     e.preventDefault();
-    var fquant=0;
-    db.firestore().collection('Categories').doc(id1).collection('SubCategories').doc(id2).collection('Products').doc(order.id).get()
-    .then(snapshot => 
-        {console.log(snapshot.data().Stock)})
+    // var fquant=0;
+    // db.firestore().collection('Categories').doc(id1).collection('SubCategories').doc(id2).collection('Products').doc(order.id).get()
+    // .then(snapshot => 
+    //     {             
+    //         // fquant = Number(snapshot.data().Stock) + Number(order.Stock)
+    // //   console.log(fquant)
+    //   setQuantity(snapshot.data().Stock)
+    // //   console.log(snapshot.docs.map(doc => (doc.data().Sub)))
+    //     })
     // console.log(Number(order.Stock),Number(quantity))
-        var fquant = Number(order.Stock)+Number(quantity)
-    db.firestore().collection('Categories').doc(`${id1}`).collection('SubCategories').doc(`${id2}`).collection('Products').
-    doc(order.id).set({
-      Stock :  fquant,
-    },{merge : true})
+    // console.log(fquant)
+        // var fquant = Number(order.Stock)+Number(quantity)
+        console.log(Number(stk),Number(order.Stock))
+    // db.firestore().collection('Categories').doc(`${id1}`).collection('SubCategories').doc(`${id2}`).collection('Products').
+    // doc(order.id).set({
+    //   Stock :  Number(stk)+Number(order.Stock),
+    // },{merge : true})
 
-    db.firestore().collection('PendingOrders').doc(order.id).set({
-        Status: false
-    },{merge : true})
+    // db.firestore().collection('PendingOrders').doc(order.id).set({
+    //     Status: false
+    // },{merge : true})
 }
   return (
     <>
-      <tr>
+
             <td>{order.Name}</td>
             <td>{order.Brand}</td>
             <td>{order.Price}</td>
             <td>{order.Stock}</td>
-            <td>{order.Date}</td>
-                {order.Status?<><td>pending</td>
+                {/* {order.Status?<><td>pending</td>
             <td><Button  className="ml-1" type="submit"variant="contained" color="primary" onClick={updateOrders}>Order Received</Button></td></>
                 :<><td>delivered</td>
-            <td><Button  disabled className="ml-1" type="submit"variant="contained" color="secondary" onClick={updateOrders}>Order Received</Button></td></>}
-     </tr>
-     
+            <td><Button  disabled className="ml-1" type="submit"variant="contained" color="secondary" onClick={updateOrders}>Order Received</Button></td></>} */}
+
     </>
   );
 }

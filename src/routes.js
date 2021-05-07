@@ -31,8 +31,24 @@ import PendingOrder from "./views/PendingOrders"
 import BillingForm from "./views/BillingForm"
 import Additems from "./views/Additems"
 import Bill from "./views/Bill"
+import Admin from "./components/Admin" 
+import BillForm from "./views/BillForm" 
 
 var routes = [
+  {
+    path:"/billform",
+    name:"BillForm",
+    icon: "tim-icons icon-atom",
+    component: BillForm,
+    layout: "/admin"
+  },
+  {
+    path: "/login",
+    name: "Login-SignUp",
+    icon: "tim-icons icon-single-02",
+    component: Admin,
+    layout: "/admin",
+  },
   {
     path:"/bill",
     name:"Bill",

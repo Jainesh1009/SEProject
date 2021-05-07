@@ -19,6 +19,7 @@ import React from "react";
 import {useState,useEffect} from "react";
 import db from '../firebase'
 import {Link} from 'react-router-dom'
+
 // reactstrap components
 import {
   Button,
@@ -41,16 +42,18 @@ function UserProfile() {
     const [phone,setPhone] = useState('');
     const [email,setEmail] = useState('');
     const [code,setCode] = useState('');
+    const [button,setButton] = useState(true)
 
     const navStyle = {
         color:'white'
     };
 
-    const addCategory = (event) => {
+    const addCustomer = (event) => {
+      setButton(false)
         //this will fire up when we click the button
         // console.log('Its working')
         event.preventDefault();//stop refresh
-        db.collection('Constumer').add({
+        db.firestore().collection('Customer').add({
           Address : address,
           Company : company,
           Name : name,
@@ -59,12 +62,12 @@ function UserProfile() {
           Pincode : code
         })
       
-        setName(''); //clear the input
-        setCompany(''); //clear the input
-        setAddress(''); //clear the input
-        setPhone(''); //clear the input
-        setEmail(''); //clear the input
-        setCode(''); //clear the input
+        // setName(''); //clear the input
+        // setCompany(''); //clear the input
+        // setAddress(''); //clear the input
+        // setPhone(''); //clear the input
+        // setEmail(''); //clear the input
+        // setCode(''); //clear the input
       }
 
   return (
@@ -159,8 +162,11 @@ function UserProfile() {
 
               <CardFooter>
               {/* onClick={addCategory} */}
-                <Button className="btn-fill" color="primary" type="submit" >
-                  <Link 
+              {button ? <h1></h1> : <h4>Customer Added go to Add Items</h4>}
+
+              {button ? <Button color='info' onClick={addCustomer}>Add Customer</Button> : 
+              <Link
+                  // onClick={setButton(!button)}                   
                   style={navStyle} 
                   to={{
                     pathname:"/admin/additems",
@@ -169,10 +175,12 @@ function UserProfile() {
                     email:{email}
                   }}
                   >
-                     Add Items
-                  </Link>
+                <Button className="btn-fill" color="primary"  >                
+                     Add Items                                   
                 </Button>
-               
+              </Link> 
+              }
+
               </CardFooter>
             </Card>
             {/* This is the button */}

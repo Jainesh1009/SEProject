@@ -43,6 +43,7 @@ function Bill(props) {
     const [total,setTotal] = useState()
     const [button,setButton] = useState(true)
     const [button2,setButton2] = useState(true)
+    // const [date,setDate] = useState(Date().toLocaleString())
 
     const usefunction = () => {
       console.log(props.location)
@@ -73,16 +74,23 @@ function Bill(props) {
     // Send Email and stores the data
     const storeorder = (e) => {
       setButton2(false)
+      // setDate(Date().toLocaleString)
       console.log("Submited")
+      // console.log(date)
 
       // Deleting the Temp dataset
       // db.collection('Temp').delete()
+      var today = new Date(),
+      date1 = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
+      // setDate(date1);
+      console.log(date1)
 
-      db.firestore().collection('Orders').add({
+      db.firestore().collection('OrdersA').add({
         Name : props.location.name,
         Email :props.location.email,
         Phone : props.location.phone,
-        Total_Price : total
+        Total_Price : total,
+        Date : date1
       })
     }
 

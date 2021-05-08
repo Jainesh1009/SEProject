@@ -64,6 +64,12 @@ function BillForm(props) {
     }
 
     const SendBill = (e) => {
+        
+        products.map((k) => {
+            //   Deleting individual components  
+            db.firestore().collection('Temp').doc(`${k.Id}`).delete()
+          })
+          // e.target.reset();
         console.log("asdd")
         e.preventDefault();    //This is important, i'm not sure why, but the email won't send without it
         console.log("asdasd")
@@ -75,11 +81,6 @@ function BillForm(props) {
           });
           setButton(!button)
 
-          products.map((k) => {
-            //   Deleting individual components  
-            db.firestore().collection('Temp').doc(`${k.Id}`).delete()
-          })
-          // e.target.reset();
           alert("Email Sent Successfully")
     }
 
@@ -264,10 +265,10 @@ useEffect(() => {
 
                   <Row>
                   {/* <input type="submit" value="Send"/> */}
-                    <Button color='success' type="submit" >                        
+  
+                    <Button color='success' type="submit">                        
                         Send Email To the Customer                        
                     </Button>    
-                                                            
                   </Row>
                 </Form> 
               </CardBody>

@@ -19,7 +19,6 @@ import React from "react";
 import {useState,useEffect} from "react";
 import db from '../firebase'
 import {Link} from 'react-router-dom'
-
 // reactstrap components
 import {
   Button,
@@ -74,13 +73,13 @@ function UserProfile() {
     <>
       <div className="content">
         <Row>
-          <Col md="8">
+          <Col md="12">
             <Card>
               <CardHeader>
                 <h5 className="title">Customer Details</h5>
               </CardHeader>
               <CardBody>
-                <Form>
+                <Form onSubmit={addCustomer}>
                   <Row>
                     <Col className="pr-md-1" md="5">
                       <FormGroup>
@@ -95,10 +94,25 @@ function UserProfile() {
                     </Col>
                   </Row>
                   <Row>
+                    <Col className="pr-md-1" md="9">
+                      <FormGroup>
+                        <label>Customer Name</label>
+                        <Input
+                          required
+                          placeholder="Name"
+                          type="text"
+                          value={name}
+                          onChange={event => setName(event.target.value)}
+                        />
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <Row>
                   <Col md="4">
                       <FormGroup>
                         <label>Phone Number</label>
                         <Input
+                          required
                           placeholder="Phone Number"
                           type="text"
                           value={phone}
@@ -112,23 +126,11 @@ function UserProfile() {
                           Email address
                         </label>
                         <Input 
+                        required
                         placeholder="Email" 
-                        type="text" 
+                        type="email" 
                         value={email}
                         onChange={event => setEmail(event.target.value)}
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className="pr-md-1" md="9">
-                      <FormGroup>
-                        <label>Name</label>
-                        <Input
-                          placeholder="Name"
-                          type="text"
-                          value={name}
-                          onChange={event => setName(event.target.value)}
                         />
                       </FormGroup>
                     </Col>
@@ -137,7 +139,7 @@ function UserProfile() {
                     <Col md="9">
                       <FormGroup>
                         <label>Address of the Company</label>
-                        <Input
+                        <Input                          
                           placeholder="Address"
                           type="text"
                           value={address}
@@ -157,76 +159,42 @@ function UserProfile() {
                       </FormGroup>
                     </Col>
                   </Row>
+                  <Row>
+                  {button ? <h1></h1> : <h4>Customer Added go to Add Items</h4>}
+                  </Row>
+                  
+                  <Row>
+                  {button ? <Button type="submit" color='info'>Add Customer</Button> : 
+                  <Link
+                      // onClick={setButton(!button)}                   
+                      style={navStyle} 
+                      to={{
+                        pathname:"/admin/additems",
+                        name:{name},
+                        phone:{phone},
+                        email:{email}
+                      }}
+                      >
+                    <Button className="btn-fill" color="primary"  >                
+                        Add Items                                   
+                    </Button>
+                  </Link> 
+                  }
+                  </Row>
+
                 </Form>
               </CardBody>
 
               <CardFooter>
               {/* onClick={addCategory} */}
-              {button ? <h1></h1> : <h4>Customer Added go to Add Items</h4>}
-
-              {button ? <Button color='info' onClick={addCustomer}>Add Customer</Button> : 
-              <Link
-                  // onClick={setButton(!button)}                   
-                  style={navStyle} 
-                  to={{
-                    pathname:"/admin/additems",
-                    name:{name},
-                    phone:{phone},
-                    email:{email}
-                  }}
-                  >
-                <Button className="btn-fill" color="primary"  >                
-                     Add Items                                   
-                </Button>
-              </Link> 
-              }
+ 
 
               </CardFooter>
             </Card>
             {/* This is the button */}
             {/* Here the Form Ends */}
           </Col>
-          {/* Here the second card starts */}
-          <Col md="4">
-            <Card className="card-user">
-              <CardBody>
-                <CardText />
-                <div className="author">
-                  <div className="block block-one" />
-                  <div className="block block-two" />
-                  <div className="block block-three" />
-                  <div className="block block-four" />
-                  <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                    <img
-                      alt="..."
-                      className="avatar"
-                      src={require("../img/emilyz.jpg").default}
-                    />
-                    <h5 className="title">Mike Andrew</h5>
-                  </a>
-                  <p className="description">Ceo/Co-Founder</p>
-                </div>
-                <div className="card-description">
-                  Do not be scared of the truth because we need to restart the
-                  human foundation in truth And I love you like Kanye loves
-                  Kanye I love Rick Owens’ bed design but the back is...
-                </div>
-              </CardBody>
-              <CardFooter>
-                <div className="button-container">
-                  <Button className="btn-icon btn-round" color="facebook">
-                    <i className="fab fa-facebook" />
-                  </Button>
-                  <Button className="btn-icon btn-round" color="twitter">
-                    <i className="fab fa-twitter" />
-                  </Button>
-                  <Button className="btn-icon btn-round" color="google">
-                    <i className="fab fa-google-plus" />
-                  </Button>
-                </div>
-              </CardFooter>
-            </Card>
-          </Col>
+          {/* Here the second card starts */}          
         </Row>
       </div>
     </>

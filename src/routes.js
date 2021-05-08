@@ -19,12 +19,10 @@ import Dashboard from "./views/Dashboard.js";
 import Icons from "./views/Icons.js";
 import Icons2 from "./views/Icons2.js";
 import Icons3 from "./views/Icons3.js";
-import Map from "./views/Map.js";
-import Notifications from "./views/Notifications.js";
+
+
 // import Rtl from "./views/Rtl.js";
-import TableList from "./views/TableList.js";
-import Typography from "./views/Typography.js";
-import UserProfile from "./views/UserProfile.js";
+
 import Category from "./views/Category.js"
 import Order from "./views/Order" 
 import PendingOrder from "./views/PendingOrders" 
@@ -42,13 +40,7 @@ var routes = [
     component: BillForm,
     layout: "/admin"
   },
-  {
-    path: "/login",
-    name: "Login-SignUp",
-    icon: "tim-icons icon-single-02",
-    component: Admin,
-    layout: "/admin",
-  },
+
   {
     path:"/bill",
     name:"Bill",
@@ -114,36 +106,20 @@ var routes = [
     component: Icons,
     layout: "/admin",
   },
-  {
-    path: "/map",
-    name: "Purchase Order",
-    // rtlName: "خرائط",
-    icon: "tim-icons icon-pin",
-    component: Map,
-    layout: "/admin",
-  },
-  {
-    path: "/notifications",
-    name: "Billing",
-    // rtlName: "إخطارات",
-    icon: "tim-icons icon-bell-55",
-    component: Notifications,
-    layout: "/admin",
-  },
-  {
-    path: "/user-profile",
-    name: "Accounts",
-    // rtlName: "ملف تعريفي للمستخدم",
-    icon: "tim-icons icon-single-02",
-    component: UserProfile,
-    layout: "/admin",
-  },
+
   {
     path: "/icons/category",
     name: "Category",
     // rtlName: "ملف تعريفي للمستخدم",
     icon: "tim-icons icon-single-02",
     component: Category,
+    layout: "/admin",
+  },
+  {
+    path: "/logout",
+    name: "Login-SignUp",
+    icon: "tim-icons icon-single-02",
+    component: Admin,
     layout: "/admin",
   },
   // {

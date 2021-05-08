@@ -25,12 +25,12 @@ import { PropTypes } from "prop-types";
 import PerfectScrollbar from "perfect-scrollbar";
 
 // reactstrap components
-import { Nav, NavLink as ReactstrapNavLink } from "reactstrap";
+import {  DropdownItem, Nav, NavLink as ReactstrapNavLink } from "reactstrap";
 import {
   BackgroundColorContext,
   backgroundColors,
 } from "./BackgroundColorContext";
-
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 var ps;
 
 function Sidebar(props) {
@@ -120,8 +120,19 @@ function Sidebar(props) {
             ) : null}
             <Nav>
               {routes.map((prop, key) => {
+                if(prop.name=="BillForm") return null
+                if(prop.name=="Bill") return null
+                if(prop.name=="AddItems") return null
+                if(prop.name=="PendingOrderPage") return null
+                if(prop.name=="OrderPage") return null
+                if(prop.name=="Products") return null
+                if(prop.name=="Subcategories") return null
+                if(prop.name=="Category") return null
+                if(prop.name=="Login-SignUp") return null
+
                 if (prop.redirect) return null;
                 return (
+                  
                   <li
                     className={
                       activeRoute(prop.path) + (prop.pro ? " active-pro" : "")
@@ -134,11 +145,18 @@ function Sidebar(props) {
                       activeClassName="active"
                       onClick={props.toggleSidebar}
                     >
+                      {console.log(prop)}
                       <i className={prop.icon} />
                       <p>{rtlActive ? prop.rtlName : prop.name}</p>
                     </NavLink>
+
                   </li>
                 );
+            //     <NavLink tag="li" to={{
+            //       pathname: `/admin/login`,
+            //       }}>
+            //       <DropdownItem onClick={props.handleLogout} className="nav-item">Log out</DropdownItem>
+            // </NavLink>
               })}
               {/* <li className="active-pro">
                 <ReactstrapNavLink href="https://www.creative-tim.com/product/black-dashboard-pro-react?ref=bdr-user-archive-sidebar-upgrade-pro">
@@ -147,6 +165,19 @@ function Sidebar(props) {
                 </ReactstrapNavLink>
               </li> */}
             </Nav>
+            <Nav>
+              <li>
+            <NavLink
+                      to= "/admin/login"
+                      className="nav-link"
+                      activeClassName="active"
+                      onClick={props.handleLogout}
+                    >
+                      <i className={props.routes[11].icon} />
+                      <p>LogOut</p>
+                    </NavLink>
+                    </li>
+                    </Nav>
           </div>
         </div>
       )}

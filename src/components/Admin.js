@@ -215,6 +215,7 @@ function Admin(props) {
               //   outterLink: "https://www.creative-tim.com/",
               //   text: "Creative Tim",
               // }}
+              handleLogout={handleLogout}
               toggleSidebar={toggleSidebar}
             />
           <div className="main-panel" ref={mainPanelRef} data={color}>

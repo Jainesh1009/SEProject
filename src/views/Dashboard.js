@@ -20,7 +20,7 @@ import React from "react";
 import classNames from "classnames";
 // react plugin used to create charts
 import { Line, Bar } from "react-chartjs-2";
-
+import fire from '../firebase'
 // reactstrap components
 import {
   Button,
@@ -52,9 +52,90 @@ import {
 
 function Dashboard(props) {
   const [bigChartData, setbigChartData] = React.useState("data1");
+  const [products, setProducts] = React.useState([]);
+  const [quants,setQuants] = React.useState([]);
+  const [name,setName] = React.useState([]);
+  const [count,setCount] = React.useState(0);
+  const [data,setData]=React.useState([]);
+  const [odars,setOdars]=React.useState([]);
+  const [tp,setTp]=React.useState([]);
+  const [tp1,setTp1]=React.useState([]);
+
   const setBgChartData = (name) => {
     setbigChartData(name);
   };
+  const arr1=[]
+  const arr2=[]
+  const AddData = () =>{
+    fire.firestore().collection('OrdersA').onSnapshot(snapshot => {
+      setOdars(snapshot.docs.map(doc => (doc.data())))})
+
+const flag=[]
+flag[0]=false
+for(var i =0;i<odars.length-1;i++){
+  var x=odars[i].Total_Price
+  for(var j=i+1;j<odars.length;j++){
+    if(odars[i].Date==odars[j].Date)
+    {
+      x=x+odars[j].Total_Price
+      flag[j]=true
+    }
+  }
+  if(!flag[i])
+ {
+
+    arr1.push(x)
+    arr2.push(odars[i].Date)
+  }
+  
+  
+}
+console.log(arr1)
+console.log(arr2)
+var list = [];
+for (var j = 0; j < arr1.length; j++) 
+  list.push({'Price': arr1[j], 'Date': arr2[j]});
+list.sort(function(a, b) {
+    return ((a.Date < b.Date) ? -1 : ((a.Date == b.Date) ? 0 : 1));
+  });
+for (var k = 0; k < list.length; k++) {
+      arr1[k] = list[k].Price;
+      arr2[k] = list[k].Date;
+  }
+  setTp(arr1)
+  setTp1(arr2)
+// console.log(tp[0])
+
+  }
+
+      //Sort could be modified to, for example, sort on the age 
+      // if the name is the same.
+  
+  React.useEffect(() => {
+    // fire.firestore().collection('Orders').onSnapshot(snapshot => {
+    //   setProducts(snapshot.docs.map(doc => (doc.data().Total_Price)))
+    //   // setProducts(arr=>[...arr,snapshot.docs.map(doc => (doc.data().Total_Price))])
+    // })
+    fire.firestore().collection('AllProducts').onSnapshot(snapshot => {
+      setQuants(snapshot.docs.map(doc => (doc.data().Quantity)))})
+    fire.firestore().collection('AllProducts').onSnapshot(snapshot => {
+        setName(snapshot.docs.map(doc => (doc.data().Name)))})
+    fire.firestore().collection('AllProducts').onSnapshot(snapshot => {
+          setData(snapshot.docs.map(doc => (doc.data())))})
+          AddData()
+      // setProducts(arr=>[...arr,snapshot.docs.map(doc => (doc.data().Total_Price))]
+      // console.log("hello")
+      // console.log(quants.length)
+
+    //  for(var i=0;i<quants.length;i++){
+    //   setCount(count+quants[i])
+    //   // console.log(quants[i])
+    //  }
+    //  console.log(count)
+
+  },[])
+  
+  
   return (
     <>
       <div className="content">
@@ -130,8 +211,8 @@ function Dashboard(props) {
               <CardBody>
                 <div className="chart-area">
                   <Line
-                    data={chartExample1[bigChartData]}
-                    options={chartExample1.options}
+                    data={[quants[0],quants[1],quants[2],quants[3],quants[4]]}
+                    options={{maintainAspectRatio : false}}
                   />
                 </div>
               </CardBody>
@@ -142,16 +223,27 @@ function Dashboard(props) {
           <Col lg="4">
             <Card className="card-chart">
               <CardHeader>
-                <h5 className="card-category">Total Shipments</h5>
+                <h5 className="card-category">Stock</h5>
                 <CardTitle tag="h3">
-                  <i className="tim-icons icon-bell-55 text-info" /> 763,215
+                  <i className="tim-icons icon-bell-55 text-info" />
                 </CardTitle>
               </CardHeader>
               <CardBody>
                 <div className="chart-area">
-                  <Line
-                    data={chartExample2.data}
-                    options={chartExample2.options}
+                  <Bar
+                    data={{
+                      labels: [name[0],name[1],name[2],name[3],name[4]],
+                      datasets:[
+                        {
+                          label: "Quantity",
+                          data:[quants[0],quants[1],quants[2],quants[3],quants[4]],
+                          backgroundColor:'#9A9A9A'
+                        }
+                      ]
+                    }}
+                    options={{
+                      maintainAspectRatio :false
+                    }}
                   />
                 </div>
               </CardBody>
@@ -162,15 +254,28 @@ function Dashboard(props) {
               <CardHeader>
                 <h5 className="card-category">Daily Sales</h5>
                 <CardTitle tag="h3">
-                  <i className="tim-icons icon-delivery-fast text-primary" />{" "}
-                  3,500€
+                <Button onClick={AddData}>
+                    Show Data
+                  </Button>
                 </CardTitle>
               </CardHeader>
               <CardBody>
                 <div className="chart-area">
-                  <Bar
-                    data={chartExample3.data}
-                    options={chartExample3.options}
+                  
+                  <Line
+                    data={{
+                      labels: [tp1[0],tp1[1],tp1[2],tp1[3]],
+                      datasets:[
+                        {
+                          label: "Price",
+                          data:[tp[0],tp[1],tp[2],tp[3]],
+                          backgroundColor:'#9A9A9A'
+                        }
+                      ]
+                    }}
+                    options={{
+                      maintainAspectRatio :false
+                    }}
                   />
                 </div>
               </CardBody>
@@ -179,17 +284,48 @@ function Dashboard(props) {
           <Col lg="4">
             <Card className="card-chart">
               <CardHeader>
-                <h5 className="card-category">Completed Tasks</h5>
+                <h5 className="card-category">Under-Stock Products</h5>
                 <CardTitle tag="h3">
-                  <i className="tim-icons icon-send text-success" /> 12,100K
+                  <i className="tim-icons icon-send text-success" /> 
                 </CardTitle>
               </CardHeader>
               <CardBody>
                 <div className="chart-area">
-                  <Line
-                    data={chartExample4.data}
-                    options={chartExample4.options}
-                  />
+                <Table className="tablesorter" responsive>
+                  <thead className="text-primary">
+                    <tr>
+                      <th>Product</th>
+                      <th>Quantity</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  
+                    <tr>
+                      <td>
+                      {data.map(doc=>(
+                        doc.Quantity<10?(<tr>{doc.Name}</tr>):
+                      (<h1></h1>)
+                      ))}
+                      </td>
+                      <td>
+                      {data.map(doc=>(
+                        doc.Quantity<10?(<tr>{doc.Quantity}</tr>):
+                        (<h1></h1>)
+                      ))}
+                      </td>
+                    </tr>
+                  
+        
+
+                    
+                  
+                    {/* <td>
+                      {quants.map(doc=>(doc>10?("Available"):("Under-Stock")))}
+                    </td> */}
+                    
+                           
+                  </tbody>
+                </Table>
                 </div>
               </CardBody>
             </Card>
@@ -531,5 +667,6 @@ function Dashboard(props) {
     </>
   );
 }
+      
 
 export default Dashboard;

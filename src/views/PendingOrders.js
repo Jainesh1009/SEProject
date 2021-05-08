@@ -41,8 +41,8 @@ function PendingOrders(props) {
     const [stock, setStock] = useState([]);
     const [quantity, setQuantity] = useState([]);
     useEffect(() => {
-    db.firestore().collection('PendingOrders').onSnapshot(snapshot => {
-      setOrders(snapshot.docs.map(doc => ({id:doc.id ,Price:doc.data().Price,Brand:doc.data().Brand,Name:doc.data().Name,Status:doc.data().Status,Stock:doc.data().Stock,Date:doc.data().Date})))
+    db.firestore().collection('PendingOrdersA').onSnapshot(snapshot => {
+      setOrders(snapshot.docs.map(doc => ({id:doc.id ,Price:doc.data().Price,Brand:doc.data().Brand,Name:doc.data().Name,Status:doc.data().Status,Stock:doc.data().Stock,Date:doc.data().Date,id1:doc.data().Id1,id2:doc.data().Id2})))
     })
 
   }, []);

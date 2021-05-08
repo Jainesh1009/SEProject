@@ -47,7 +47,7 @@ function Additems(props) {
     event.preventDefault()
     db.firestore().collection('Temp').doc(id).set({
       Id:id,
-      Quantity : quantity
+      Quantity : Number(quantity)
     })
 
     setId('')// clear the input
@@ -70,7 +70,7 @@ function Additems(props) {
        var quant = doc.data().Quantity
        var q = k.Quantity;       
        db.firestore().collection('AllProducts').doc(`${k.Id}`).set({
-        Quantity : quant-q
+        Quantity : Number(quant)-Number(q)
       },
       {merge : true}
       )

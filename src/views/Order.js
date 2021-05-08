@@ -71,19 +71,21 @@ function Order(props) {
               console.log(error.text);
           });
           setButton(!button)
-          // e.target.reset();
+          e.target.reset();
           
           var today = new Date(),
           date1 = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
           setDate(date1);
           console.log(date1)
-          db.firestore().collection('PendingOrders').doc(props.match.params.id3).set({
+          db.firestore().collection('PendingOrdersA').doc(props.match.params.id3).set({
             Name : name,
             Price: price,
             Brand: brand,
             Stock: stock,
             Status: true,
-            Date : date1
+            Date : date1,
+            Id1: props.match.params.id1,
+            Id2: props.match.params.id2
           })
         
           setBrand(''); //clear the input
@@ -104,13 +106,16 @@ const addPO = () => {
   date1 = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
   setDate(date1);
   console.log(date1)
-  db.firestore().collection('PendingOrders').doc(props.match.params.id3).set({
+  console.log(props.match.params.id1,props.match.params.id2)
+  db.firestore().collection('PendingOrdersA').doc(props.match.params.id3).set({
     Name : name,
     Price: price,
     Brand: brand,
     Stock: stock,
     Status: true,
-    Date : date1
+    Date : date1,
+    Id1: props.match.params.id1,
+    Id2: props.match.params.id2
   })
 
   setBrand(''); //clear the input

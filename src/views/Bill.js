@@ -89,7 +89,7 @@ function Bill(props) {
         Name : props.location.name,
         Email :props.location.email,
         Phone : props.location.phone,
-        Total_Price : total,
+        Total_Price : Number(total),
         Date : date1
       })
     }

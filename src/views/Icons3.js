@@ -79,7 +79,8 @@ function Icons3(props) {
 
         db.firestore().collection('AllProducts').doc(`${id}`).set({
           Name: name,
-          Quantity: stock  
+          Quantity: Number(stock),
+          Price: price  
         })
         setStock('')
         setId('');

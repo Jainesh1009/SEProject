@@ -64,7 +64,7 @@ var routes = [
   },
   {
     path:"/icons/:id1/:id2/:id3/pendingOrder",
-    name:"PendingOrderPage",
+    name:"Pending Orders",
     icon: "tim-icons icon-atom",
     component: PendingOrder,
     layout: "/admin"

@@ -41,8 +41,8 @@ function OrderConfirm({order,id1,id2,id3}) {
     const [stock, setStock] = useState([]);
     const [quantity, setQuantity] = useState([]);
     useEffect(() => {
-    db.firestore().collection('PendingOrders').onSnapshot(snapshot => {
-      setOrders(snapshot.docs.map(doc => ({id:doc.id ,Price:doc.data().Price,Brand:doc.data().Brand,Name:doc.data().Name,Status:doc.data().Status,Stock:doc.data().Stock})))
+    db.firestore().collection('PendingOrdersA').onSnapshot(snapshot => {
+      setOrders(snapshot.docs.map(doc => ({id:doc.id ,Price:doc.data().Price,Brand:doc.data().Brand,Name:doc.data().Name,Status:doc.data().Status,Stock:doc.data().Stock,id1:doc.data().Id1,id2:doc.data().Id2})))
     })
 
   }, []);
@@ -51,20 +51,20 @@ function OrderConfirm({order,id1,id2,id3}) {
 
 // const updateOrders = (stock) => (e) => {
   const updateOrders = (e) => {
-
+    console.log(order.id,order.id1,order.id2)
     e.preventDefault();
     var fquant=0;
-    db.firestore().collection('Categories').doc(id1).collection('SubCategories').doc(id2).collection('Products').doc(order.id).get()
+    db.firestore().collection('Categories').doc(order.id1).collection('SubCategories').doc(order.id2).collection('Products').doc(order.id).get()
     .then(snapshot => 
-        {console.log(snapshot.data().Stock)})
-    // console.log(Number(order.Stock),Number(quantity))
+        {setQuantity(snapshot.data().Stock)})
+    console.log(Number(order.Stock),Number(quantity))
         var fquant = Number(order.Stock)+Number(quantity)
-    db.firestore().collection('Categories').doc(`${id1}`).collection('SubCategories').doc(`${id2}`).collection('Products').
+    db.firestore().collection('Categories').doc(order.id1).collection('SubCategories').doc(order.id2).collection('Products').
     doc(order.id).set({
       Stock :  fquant,
     },{merge : true})
 
-    db.firestore().collection('PendingOrders').doc(order.id).set({
+    db.firestore().collection('PendingOrdersA').doc(order.id).set({
         Status: false
     },{merge : true})
 }

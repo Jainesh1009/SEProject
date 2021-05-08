@@ -123,7 +123,7 @@ function Sidebar(props) {
                 if(prop.name=="BillForm") return null
                 if(prop.name=="Bill") return null
                 if(prop.name=="AddItems") return null
-                if(prop.name=="PendingOrderPage") return null
+                // if(prop.name=="PendingOrderPage") return null
                 if(prop.name=="OrderPage") return null
                 if(prop.name=="Products") return null
                 if(prop.name=="Subcategories") return null
